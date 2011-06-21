@@ -10,7 +10,7 @@ $(window).resize(function() {
 var temps = new Object;
 
 var rt = function() { //randtemp
-	return 0.5 * Math.floor(Math.random() * 4) + 17;
+	return 0.1 * Math.floor(Math.random() * 20) + 17;
 };
 
 var gen_temps = function() {
@@ -99,6 +99,7 @@ color[][] grid = new color[16][50];
 int a = 16;
 int b = 0;
 PImage bg;
+PFont mono;
 
 int _red(float temp) {
 	temp = (-1.274160369) * (temp * temp * temp) + (85.46264878) * (temp * temp) - (1855.266402) * (temp) + (13122.13404);
@@ -128,28 +129,30 @@ color color_from_temp(float temp, int a) {
 void blendAll() {
 	for (int i=0;i<16;i++) {
 		for (int j=0;j<50;j++) {
-			if (grid[i+1]) {
-				if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
-				if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
-				if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
+			if (!temps[i+1] || !temps[i+1][j+1]) { //pass over already-set temp values
+				if (grid[i+1]) {
+					if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
+					if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
+					if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
+				}
+				if (grid[i-1]) {
+					if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
+					if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
+					if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
+				}
+				if (grid[i+1]) {
+					if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
+					if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
+					if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
+				}
+				if (grid[i-1]) {
+					if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
+					if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
+					if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
+				}
+				if (grid[i][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j-1],0.5);
+				if (grid[i][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j+1],0.5);
 			}
-			if (grid[i-1]) {
-				if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
-				if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
-				if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
-			}
-			if (grid[i+1]) {
-				if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
-				if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
-				if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
-			}
-			if (grid[i-1]) {
-				if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
-				if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
-				if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
-			}
-			if (grid[i][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j-1],0.5);
-			if (grid[i][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j+1],0.5);
 		}
 	}
 }
@@ -163,6 +166,10 @@ void drawSquares() {
 		for (int j=0;j<50;j++) {
 			fill(grid[i][j]);
 			rect(j*sideLength,i*sideLength - 3,sideLength,sideLength);
+			if (temps[i+1] && temps[i+1][j]) {
+				fill(0);
+				text(temps[i+1][j],j*sideLength,i*sideLength+12);
+			}
 		}
 	}
 }
@@ -190,6 +197,10 @@ void setup() {
 	//setup bground image
 	bg = loadImage("ComputerRoomLayout.jpg");
 	image(bg,0,0,w,(w/2401*740));
+
+	mono = loadFont("Arial");
+	textFont(mono,10);
+	textAlign(RIGHT);
 
 	gen_temps();
 	noStroke();
