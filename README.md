@@ -1,1 +1,1 @@
-heater2 is a Processing.js replacement for heater.
+heater2 is a Processing.js replacement for heater. It can be admired [here](http://ewenig.github.com/heater2/).
