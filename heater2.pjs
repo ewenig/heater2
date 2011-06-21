@@ -10,6 +10,10 @@ $(window).resize(function() {
 var temps = new Object;
 
 var rt = function() { //randtemp
+	return 0.1 * Math.floor(Math.random() * 70) + 18;
+};
+
+var coolrt = function() {
 	return 0.1 * Math.floor(Math.random() * 20) + 17;
 };
 
@@ -55,16 +59,17 @@ var gen_temps = function() {
 	};
 	
 	temps["10"] = {
+		"2":  rt(),
 		"4":  rt(),
 		"6":  rt(), 
 		"8":  rt(), 
 		"10": rt(),
 		"12": rt(),
-		"14": rt(), 
-		"16": rt(),
-		"18": rt(),
-		"20": rt(),
-		"22": rt(),
+		"14": coolrt(), 
+		"16": coolrt(),
+		"18": coolrt(),
+		"20": coolrt(),
+		"22": 26,
 		"24": rt(),
 		"26": rt(),
 		"28": rt(),
@@ -130,28 +135,34 @@ void blendAll() {
 	for (int i=0;i<16;i++) {
 		for (int j=0;j<50;j++) {
 			if (!temps[i+1] || !temps[i+1][j+1]) { //pass over already-set temp values
-				if (grid[i+1]) {
-					if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
-					if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
-					if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
-				}
-				if (grid[i-1]) {
-					if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
-					if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
-					if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
-				}
-				if (grid[i+1]) {
-					if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
-					if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
-					if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
-				}
-				if (grid[i-1]) {
-					if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
-					if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
-					if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
-				}
-				if (grid[i][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j-1],0.5);
 				if (grid[i][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j+1],0.5);
+				if (grid[i][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i][j-1],0.5);
+
+				if (grid[i+1]) {
+					if (grid[i+1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
+					if (grid[i+1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
+					if (grid[i+1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
+				}
+				if (grid[i-1] && !(i == 9 && j >= 13 && j <= 19)) {
+					if (grid[i-1][j+1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
+					if (grid[i-1][j])   grid[i][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
+					if (grid[i-1][j-1]) grid[i][j] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
+				}
+			} else {
+				if (grid[i+1]) {
+					if (grid[i+1][j-1]) grid[i+1][j-1] = lerpColor(grid[i][j],grid[i+1][j-1],0.5);
+					if (grid[i+1][j])   grid[i+1][j] = lerpColor(grid[i][j],grid[i+1][j],0.5);
+					if (grid[i+1][j+1]) grid[i+1][j+1] = lerpColor(grid[i][j],grid[i+1][j+1],0.5);
+				}
+				if (grid[i][j+1]) grid[i][j+1] = lerpColor(grid[i][j],grid[i][j+1],0.5);
+				if (grid[i][j-1]) grid[i][j-1] = lerpColor(grid[i][j],grid[i][j-1],0.5);
+
+				if (grid[i-1] && !(i == 9 && j >= 13 && j <= 19)) {
+					if (grid[i-1][j+1]) grid[i-1][j+1] = lerpColor(grid[i][j],grid[i-1][j+1],0.5);
+					if (grid[i-1][j])   grid[i-1][j] = lerpColor(grid[i][j],grid[i-1][j],0.5);
+					if (grid[i-1][j-1]) grid[i-1][j-1] = lerpColor(grid[i][j],grid[i-1][j-1],0.5);
+				}
+				
 			}
 		}
 	}
