@@ -109,7 +109,7 @@ int[] _rgb = { 0, 0, 0 };
 int _rgbhc = 0;
 
 int _red(float temp) {
-	temp = (-1.274160369) * (temp * temp * temp) + (85.46264878) * (temp * temp) - (1855.266402) * (temp) + (13122.13404);
+	temp = (59.0) * (temp) - (1199.83);
 	if (temp < 0) temp = 0;
 	if (temp > 255) temp = 255;
 	return round(temp);
